@@ -1,0 +1,18 @@
+_keys:
+- key_manager: testing
+  algorithm: none
+aes:
+- key_id: resolved
+  key_manager: testing
+  algorithm: aesgcm256
+  key_ciphertext: eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXk=
+  ciphertext: /U1NIb8/C6nFFNzO28lwVKNJcikrSV4+eL6uLl9J0ZCb
+none:
+- algorithm: none
+  ciphertext: aGVsbG8=
+secretbox:
+- key_id: resolved
+  key_manager: testing
+  algorithm: secretbox
+  key_ciphertext: eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXk=
+  ciphertext: W2AOC4WtDzoqfM7K1YpKDc9SFSfhfpAkJmPEpuoDyoGCfoZxKL2ymZ/cvkXu
