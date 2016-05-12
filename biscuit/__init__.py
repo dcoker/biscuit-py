@@ -5,13 +5,16 @@ from __future__ import absolute_import, division, print_function, \
 import base64
 import binascii
 import logging
-import sys
+
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.ciphers import (
+    Cipher, modes, algorithms
+)
 
 import boto3
 import botocore
 import botocore.exceptions
 import libnacl.secret
-from Cryptodome.Cipher import AES
 
 KEY_ID_FIELD = "key_id"
 CIPHERTEXT_FIELD = "ciphertext"
@@ -101,6 +104,7 @@ class Biscuit:
 
 
 class AwsKmsKeyManager:
+
     def __init__(self, factory):
         self.factory = factory
 
@@ -113,11 +117,13 @@ class AwsKmsKeyManager:
 
 
 class TestingKeyManager:
+
     def __call__(self, key, ciphertext):
         return ("x" * 32).encode('ascii')
 
 
 class SecretBoxAlgo():
+
     def requires_key(self):
         return True
 
@@ -127,6 +133,7 @@ class SecretBoxAlgo():
 
 
 class PlainAlgo():
+
     def requires_key(self):
         return False
 
@@ -135,6 +142,7 @@ class PlainAlgo():
 
 
 class AesGcm256Algo():
+
     def requires_key(self):
         return True
 
@@ -144,8 +152,12 @@ class AesGcm256Algo():
         ciphertext_no_nonce = ciphertext[:-12]
         gcm_tag = ciphertext_no_nonce[-16:]
         ciphertext_only = ciphertext_no_nonce[:-16]
-        aes = AES.new(key, AES.MODE_GCM, nonce=nonce)
-        return aes.decrypt_and_verify(ciphertext_only, gcm_tag)
+
+        decryptor = Cipher(algorithms.AES(key),
+                           modes.GCM(nonce, gcm_tag),
+                           backend=default_backend()).decryptor()
+
+        return decryptor.update(ciphertext_only) + decryptor.finalize()
 
 
 def region_from_arn(arn):

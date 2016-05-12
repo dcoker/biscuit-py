@@ -28,7 +28,7 @@ setup(
     install_requires=[
         'boto3>=1.3.0,<2',
         'libnacl>=1.4.4,<2',
-        'pycryptodomex>=3.4.2,<4',
+        'cryptography>=1.3.2,<2',
         'pyyaml>=3.11,<4'
     ],
     test_suite='tests.biscuit_test',
